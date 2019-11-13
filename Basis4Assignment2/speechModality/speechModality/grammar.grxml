@@ -1,0 +1,136 @@
+﻿<?xml version="1.0"?>
+<grammar xml:lang="pt-PT" version="1.0" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
+	<rule id="rootRule" scope="public">
+	  <item>
+		  <item>
+			<ruleref uri="#consultar"/><tag>out.consultar=rules.latest();</tag>
+		  </item>
+      <item>
+			<ruleref uri="#object"/>
+			<tag>out.object=rules.latest();</tag>
+		  </item>
+	  </item>
+    <item>
+      <item>
+        <ruleref uri="#fazer"/>
+        <tag>out.fazer=rules.latest();</tag>
+      </item>
+      <item>
+        <ruleref uri="#actions"/>
+        <tag>out.actions=rules.latest();</tag>
+      </item>
+    </item>
+    <item>
+      <item>
+        <ruleref uri="#fazer"/>
+        <tag>out.fazer=rules.latest();</tag>
+      </item>
+      <item>
+        <ruleref uri="#componentes"/>
+        <tag>out.actions=rules.latest();</tag>
+      </item>
+    </item>
+
+    <item>
+      <item>
+        <ruleref uri="#comandos"/>
+        <tag>out.comandos=rules.latest();</tag>
+      </item>
+      <item>
+        <ruleref uri="#componentes"/>
+        <tag>out.componentes=rules.latest();</tag>
+      </item>
+    </item>
+	</rule>
+	<rule id="consultar">
+	  <one-of>
+      <item>
+        queria abrir o<tag>out="consultar"</tag>
+      </item>
+      <item>
+        gostaria de ver<tag>out="consultar"</tag>
+      </item>
+      <item>
+        mostra-me<tag>out="consultar"</tag>
+      </item>
+      <item>
+        quero ver<tag>out="consultar"</tag>
+      </item>
+      <item>
+        consultar<tag>out="consultar"</tag>
+      </item>
+    </one-of>
+  </rule>
+  <rule id="fazer">
+    <one-of>   
+      <item>
+        quero fazer<tag>out="fazer"</tag>
+      </item>
+      <item>
+        fazer<tag>out="fazer"</tag>
+      </item>
+      <item>
+        gostava de fazer<tag>out="fazer"</tag>
+      </item>
+      
+      <item>
+        maximizar<tag>out="maximizar"</tag>
+      </item>
+      <item>
+        quero aumentar<tag>out="maximizar"</tag>
+      </item>
+      <item>
+        minimizar<tag>out="minimizar"</tag>
+      </item>
+	  </one-of>
+	</rule>
+	<rule id="object">
+	  <one-of>
+		<item>que andei a fazer<tag>out="histórico"</tag></item>
+		<item>que sites visitei<tag>out="histórico"</tag></item>
+		<item>meu histórico<tag>out="histórico"</tag></item>
+		<item>histórico<tag>out="histórico"</tag></item>
+    </one-of>
+
+  </rule>
+  <rule id="comandos">
+    <one-of>
+      <item>
+        atualizar<tag>out="atualizar"</tag>
+      </item>
+      <item>
+        quero atualizar<tag>out="atualizar"</tag>
+      </item>
+      <item>
+        quero recarregar<tag>out="atualizar"</tag>
+      </item>
+      <item>
+        quero abrir de novo<tag>out="atualizar"</tag>
+      </item>
+   </one-of>
+
+  </rule>
+  <rule id="componentes">
+    <one-of>
+      <item>
+        página<tag>out="página"</tag>
+      </item>
+      <item>
+        janela<tag>out="janela"</tag>
+      </item>
+      <item>
+        tab<tag>out="tab"</tag>
+      </item>
+    </one-of>
+
+  </rule>
+  <rule id="actions">
+    <one-of>
+		<item>scroll down<tag>out="scroll down"</tag></item>
+		<item>scroll up<tag>out="scroll up"</tag></item>
+		<item>downloads<tag>out="downloads"</tag></item>
+		<item>aos favoritos<tag>out="aos favoritos"</tag></item>
+    <item>google<tag>out="google"</tag></item>
+	  </one-of>
+	</rule>
+</grammar>

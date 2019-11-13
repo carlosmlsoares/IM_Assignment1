@@ -1,49 +1,42 @@
 ﻿<?xml version="1.0"?>
-<grammar xml:lang="pt-PT" version="1.0" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
-	<rule id="rootRule" scope="public">
-	  <item>
-		  <item>
-			<ruleref uri="#object"/>
-			<tag>out.shape=rules.latest();</tag>
-		  </item>
-		  <item>
-			<ruleref uri="#color"/>
-			<tag>out.color=rules.latest();</tag>
-		  </item>
-	  </item>
+<grammar xml:lang="pt-PT" version="1.0" xmlns="http://www.w3.org/2001/06/grammar" root="rootRule" tag-format="semantics/1.0">
+	
+  <rule id="rootRule" scope="public">
+
+    <one-of>
+      <item> 
+        <ruleref uri="open.grxml"/>
+      </item>
+      <item>
+        <ruleref uri="save.grxml"/>
+      </item>
+      <item>
+        <ruleref uri="commands.grxml"/>
+      </item>
+      <item>
+        <ruleref uri="#Close"/>
+        <tag>out.Close = rules.Close</tag>
+      </item>
+      <item>
+        <ruleref uri="search.grxml"/>
+      </item>
+    </one-of>
+   
 	</rule>
-	<rule id="object">
-	  <one-of>
-      <item>
-        queria abrir o<tag>out="queria abrir o"</tag>
-      </item>
-      <item>
-        abrir<tag>out="abrir"</tag>
-      </item>
-      <item>
-        adicionar<tag>out="adicionar"</tag>
-      </item>
-      <item>
-        consultar<tag>out="consultar"</tag>
-      </item>
-      <item>
-        fazer<tag>out="fazer"</tag>
-      </item>
-      <item>
-        atualizar<tag>out="atualizar"</tag>
-      </item>
-	  </one-of>
-	</rule>
-	<rule id="color">
-	  <one-of>
-		<item>histórico<tag>out="histórico"</tag></item>
-		<item>scroll down<tag>out="scroll down"</tag></item>
-		<item>scroll up<tag>out="scroll up"</tag></item>
-		<item>downloads<tag>out="downloads"</tag></item>
-		<item>aos favoritos<tag>out="aos favoritos"</tag></item>
-    <item>google<tag>out="google"</tag></item>
-    <item>página<tag>out="página"</tag></item>
-    <item>tab<tag>out="tab"</tag></item>
-	  </one-of>
-	</rule>
+
+  <rule id="Close">
+    <item>
+      <one-of>
+        <item> Fechar </item>
+        <item> Fecha </item>
+        <item> Encerra </item>
+        <item> Apaga </item>
+      </one-of>
+    </item>
+    <tag>out="close"</tag>
+    <item>
+      <ruleref uri="open.grxml#TabObject"/>
+    </item>
+  </rule>
+
 </grammar>

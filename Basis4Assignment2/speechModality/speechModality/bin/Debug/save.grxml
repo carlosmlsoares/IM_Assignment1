@@ -1,0 +1,39 @@
+﻿<?xml version="1.0"?>
+<grammar xml:lang="pt-PT" version="1.0" xmlns="http://www.w3.org/2001/06/grammar" root="Save" tag-format="semantics/1.0">
+
+	<rule id="Save" scope="public">
+		<example> Guarda nos favoritos </example>
+		<example> Adiciona aos favoritos </example>
+
+		<item> <ruleref uri="#SaveSpec"/> <tag> out.SaveSpec = rules.SaveSpec; </tag> </item>
+		<ruleref special="GARBAGE" />
+		<item> <ruleref uri="#SaveObject"/> <tag> out.SaveObject = rules.SaveObject; </tag> </item>
+	</rule>
+  
+	<rule id="SaveSpec">
+		<one-of>
+			<item> Adiciona </item>
+			<item> Guarda </item>
+			<item> Gosto </item>
+	  </one-of>
+    <tag>out="save"</tag>
+	</rule>
+  
+	<rule id="SaveObject">
+		<one-of>
+			<item> <ruleref uri="#FavObject"/> <tag> out.Object = rules.FavObject; </tag> </item>
+		</one-of>
+	</rule>
+  
+	<rule id="FavObject">
+		<one-of>
+			<item> página </item>
+			<item> site </item>
+			<item> website </item>
+			<item> favoritos </item>
+			<item> favorito </item>
+		</one-of>
+    <tag>out = "fav"</tag>
+	</rule>
+  
+</grammar>

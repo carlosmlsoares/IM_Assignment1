@@ -1,0 +1,136 @@
+﻿<?xml version="1.0"?>
+<grammar xml:lang="pt-PT" version="1.0" xmlns="http://www.w3.org/2001/06/grammar" root="Command" tag-format="semantics/1.0">
+
+	<rule id="Command" scope="public">
+		<example> Faz zoom in </example>
+		<example> Aumenta o zoom </example>
+    <example> Avança para a tab seguinte </example>
+
+    <one-of>
+
+      <!--O command e o object podem vir trocados-->
+      <item>
+        <one-of>
+          <item>
+            <ruleref uri="#MoveCommand"/>
+            <tag>out.CommandSpec = rules.MoveCommand;</tag>
+            <ruleref uri="open.grxml#TabObject"/>
+            <tag>out.CommandObject = rules.TabObject</tag>
+          </item>
+
+          <item>
+            <ruleref uri="open.grxml#TabObject"/>
+            <ruleref uri="#MoveCommand"/>
+            <tag>out.CommandSpec = rules.MoveCommand; out.CommandObject = rules.TabObject</tag>
+          </item>
+        </one-of>
+      </item>
+
+      <item>
+        <ruleref uri="#SizeCommand"/>
+        <tag>out.CommandSpec = rules.SizeCommand;</tag>
+        <item repeat="0-1">
+          <ruleref uri="#SizeObject"/>
+        </item>
+      </item>
+
+      <item>
+        <ruleref uri="#WindowSizeCommand"/>
+        <tag>out.CommandSpec = rules.WindowSizeCommand;</tag>
+      </item>
+
+    </one-of>
+
+	</rule>
+
+  <rule id="CommandObject">
+
+    <one-of>
+      <item>
+        <ruleref uri="open.grxml#TabObject"/>
+        <tag>out.Object = rules.TabObject;</tag>
+      </item>
+    </one-of>    
+    
+  </rule>
+
+  <rule id="MoveCommand">
+    <one-of>
+      
+      <item>
+        <one-of>
+          <item> Recua </item>
+          <item> Anterior </item>
+        </one-of>
+        <tag>out="previous";</tag>
+      </item>
+
+      <item>
+        <one-of>
+          <item> Próxima </item>
+          <item> Seguinte </item>
+        </one-of>
+        <tag>out="next";</tag>
+      </item>
+
+    </one-of>
+  </rule>
+
+  <rule id="SizeCommand">
+
+    <one-of>
+
+      <item>
+        <one-of>
+          <item> Aumenta </item>
+          <item> Zoom in </item>
+          <item> Faz zoom in </item>
+          <item> magnifica </item>
+        </one-of>
+        <tag>out="zoom_in";</tag>
+      </item>
+
+      <item>
+        <one-of>
+          <item> Diminui </item>
+          <item> Zoom out </item>
+          <item> Faz zoom out </item>
+          <item> mignifica </item>
+        </one-of>
+        <tag>out="zoom_out";</tag>
+      </item>
+
+    </one-of>
+    
+  </rule>
+
+  <rule id="WindowSizeCommand">
+
+    <one-of>
+
+      <item>
+        <one-of>
+          <item> Maximiza </item>
+        </one-of>
+        <tag>out="maximize";</tag>
+      </item>
+
+      <item>
+        <one-of>
+          <item> Minimiza </item>
+        </one-of>
+        <tag>out="minimize";</tag>
+      </item>
+
+    </one-of>
+    
+  </rule>
+
+  <rule id="SizeObject">
+    <one-of>
+      <item>Página</item>
+    </one-of>
+  </rule>
+
+  
+</grammar>

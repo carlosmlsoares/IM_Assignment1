@@ -25,6 +25,7 @@ namespace AppGui
         private MmiCommunication mmiC;
         private IWebDriver driver;
         private InputSimulator sim;
+        private List<string> tabs;
         public MainWindow()
         {
 
@@ -34,6 +35,7 @@ namespace AppGui
             driver = new ChromeDriver(".");
             System.Threading.Thread.Sleep(3000);
             sim = new InputSimulator();
+            tabs = driver.WindowHandles.ToList();
 
             mmiC = new MmiCommunication("localhost", 8000, "User1", "GUI");
             mmiC.Message += MmiC_Message;
@@ -47,109 +49,198 @@ namespace AppGui
             var doc = XDocument.Parse(e.Message);
             var com = doc.Descendants("command").FirstOrDefault().Value;
             dynamic json = JsonConvert.DeserializeObject(com);
-
-            switch ((string)json.recognized[0].ToString())
+            
+            var rec0 = json.recognized[0].ToString();
+            var rec1="";
+            int cont = 0;
+            foreach (string word in json.recognized)
             {
+                cont++;
+            }
+            if (cont == 1)
+            {
+                rec1 = "";
+            }
+            else { rec1 = json.recognized[1].ToString(); }
+           
+            
 
-                case "comando":
+            var words = "";
+            foreach(string word in json.recognized)
+            {
+                if (word != "search")
+                {
+                    words += word+" ";
+                }
+            }
+            
+            
+            List<String> numbers = new List<String>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+            switch (rec0)
+            {
+                case "search":
+
+                    sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                    sim.Keyboard.KeyPress(VirtualKeyCode.VK_E);
+                    sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                    sim.Keyboard.TextEntry(words);
+                    System.Threading.Thread.Sleep(100);
+                    sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
+
                     break;
+                case "save":
+                    switch (rec1)
+                    {
+                        default:
+                            sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                            sim.Keyboard.KeyPress(VirtualKeyCode.VK_D);
+                            sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                            System.Threading.Thread.Sleep(100);
+                            sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
+                            break;
+                    }
+                    break;
+                    
+
+                case "minimize":
+                    switch (rec1)
+                    {
+                        default:
+                            driver.Manage().Window.Minimize();
+                            break;
+                    }
+                    break;
+                case "maximize":
+                    switch (rec1)
+                    {
+                        default:
+                            driver.Manage().Window.Maximize();
+                            break;
+                    }
+                    break;
+                case "zoom_in":
+                    switch (rec1)
+                    {
+                        default:
+                            sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                            sim.Keyboard.KeyPress(VirtualKeyCode.OEM_PLUS);
+                            sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                            break;
+                    }
+                    break;
+                    
+                case "zoom_out":
+                    switch (rec1)
+                    {
+                        default:
+                            sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                            sim.Keyboard.KeyPress(VirtualKeyCode.OEM_MINUS);
+                            sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                            break;
+                    }
+                    break;
+                case "previous":
+                    sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                    sim.Keyboard.KeyDown(VirtualKeyCode.SHIFT);
+                    sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
+                    sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                    sim.Keyboard.KeyUp(VirtualKeyCode.SHIFT);
+                    tabs = driver.WindowHandles.ToList();
+                    int index1 = tabs.IndexOf(driver.CurrentWindowHandle);
+                    if (index1 == 0)
+                    {
+                        driver.SwitchTo().Window(driver.WindowHandles.Last());
+                    }
+                    else
+                    {
+                        driver.SwitchTo().Window(tabs[index1 - 1]);
+                    }
+                    break;
+                case "next":
+                    sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                    sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
+                    sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                    //Console.WriteLine(tabs.ToString());
+                    tabs = driver.WindowHandles.ToList();
+                    int index2 = tabs.IndexOf(driver.CurrentWindowHandle);
+                    if (index2 == tabs.Count()-1)
+                    {
+                        driver.SwitchTo().Window(driver.WindowHandles.First());
+                    }
+                    else
+                    {
+                        driver.SwitchTo().Window(tabs[index2 + 1]);
+                    }
+                    
+
+                    break;
+                case "close":
+                    
+                    int index = tabs.IndexOf(driver.CurrentWindowHandle);
+                    driver.Close(); 
+                    driver.SwitchTo().Window(driver.WindowHandles.First());
+
+                    
+                    break;
+                case "open":
+                    switch (rec1)
+                    {
+                        case "tab":
+                            sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                            sim.Keyboard.KeyPress(VirtualKeyCode.VK_T);
+                            sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                            driver.SwitchTo().Window(driver.WindowHandles.Last());
+                            break;
+
+                        case "historic":
+                            sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                            sim.Keyboard.KeyPress(VirtualKeyCode.VK_H);
+                            sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                            driver.SwitchTo().Window(driver.WindowHandles.Last());
+                            break;
+                        case "favourites":
+                            sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+                            sim.Keyboard.KeyDown(VirtualKeyCode.SHIFT);
+                            sim.Keyboard.KeyPress(VirtualKeyCode.VK_O);
+                            sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                            sim.Keyboard.KeyUp(VirtualKeyCode.SHIFT);
+                            break;
+                        
+                        default:
+                            if (driver.Url.Contains("https://www.google.com/search?")){
+                                if (numbers.Contains(rec1))
+                                {
+
+                                    int linkNumber = Int32.Parse(rec1);
+
+                                    ICollection<IWebElement> webElements = driver.FindElements(By.TagName("a"));
+                                    List<IWebElement> final = new List<IWebElement>();
+                                    foreach (IWebElement we in webElements)
+                                    {
+                                        ICollection<IWebElement> results = we.FindElements(By.TagName("h3"));
+                                        if (results.Count != 0)
+                                        {
+                                            Console.WriteLine(results.First().Text.ToString() + "\t" + we.GetAttribute("href"));
+                                            final.Add(we);
+                                        }
+                                    }
+                                    IWebElement element = final[linkNumber + 1];
+
+                                    element.Click();
+
+                                    break;
+
+                                }
+                                break;
+                            }
+                            break;
+                            
+                    }
+                    break;
+                        
             }
 
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                switch ((string)json.recognized[1].ToString())
-                {
-
-                    case "1": //bookmarking
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.VK_D);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        System.Threading.Thread.Sleep(100);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
-                        break;
-
-
-                    case "2": //maximize
-                        driver.Manage().Window.Maximize();
-                        break;
-                    case "3": //minimize
-                        driver.Manage().Window.Minimize();
-                        break;
-                    case "4": //new tab
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.VK_T);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        driver.SwitchTo().Window(driver.Url);
-
-                        break;
-                    case "5": //next tab
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        driver.SwitchTo().Window(driver.Url);
-
-                        break;
-                    case "6": //prev tab
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyDown(VirtualKeyCode.SHIFT);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.TAB);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.SHIFT);
-                        driver.SwitchTo().Window(driver.Url);
-                        break;
-                    case "7": //open history
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.VK_H);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        driver.SwitchTo().Window(driver.Url);
-                        break;
-                    case "8": //close tab
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.VK_W);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        driver.SwitchTo().Window(driver.Url);
-                        break;
-                    case "9": //zoom in
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.OEM_PLUS);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        break;
-                    case "10": //zoom out
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.OEM_MINUS);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        break;
-                    case "11": //open google
-                        //driver.Url = "www.google.com";
-                        break;
-                    case "12": //open favorites
-                        sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyDown(VirtualKeyCode.SHIFT);
-                        sim.Keyboard.KeyPress(VirtualKeyCode.VK_O);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                        sim.Keyboard.KeyUp(VirtualKeyCode.SHIFT);
-
-                        break;
-
-                    case "13":
-                        ICollection<IWebElement> webElements = driver.FindElements(By.TagName("a"));
-                        foreach (IWebElement we in webElements)
-                        {
-                            ICollection<IWebElement> results = we.FindElements(By.TagName("h3"));
-                            if (results.Count != 0)
-                            {
-                                Console.WriteLine(results.First().Text.ToString() + "\t" + we.GetAttribute("href"));
-                            }
-
-                        }
-
-
-                        //results.First().Click();w
-
-                        break;
-
-                }
-            });
+            
 
 
 

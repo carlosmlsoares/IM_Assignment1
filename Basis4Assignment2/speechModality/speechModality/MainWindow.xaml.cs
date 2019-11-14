@@ -26,6 +26,7 @@ namespace speechModality
         {
             InitializeComponent();
 
+
             _sm = new SpeechMod();
             _sm.Recognized += _sm_Recognized;
         }

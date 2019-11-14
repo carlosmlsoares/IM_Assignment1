@@ -139,3 +139,7 @@ C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignm
 C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\bin\Debug\save.grxml
 C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\bin\Debug\commands.grxml
 C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\bin\Debug\search.grxml
+C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\open.grxml
+C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\save.grxml
+C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\commands.grxml
+C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\search.grxml

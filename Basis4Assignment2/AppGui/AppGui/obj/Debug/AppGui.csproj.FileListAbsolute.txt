@@ -139,3 +139,5 @@ C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignm
 C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignment2\AppGui\AppGui\obj\Debug\AppGui.g.resources
 C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignment2\AppGui\AppGui\obj\Debug\AppGui.Properties.Resources.resources
 C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignment2\AppGui\AppGui\obj\Debug\AppGui.csproj.GenerateResource.Cache
+C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\AppGui\AppGui\bin\Debug\WindowsInput.dll
+C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\AppGui\AppGui\bin\Debug\WindowsInput.xml

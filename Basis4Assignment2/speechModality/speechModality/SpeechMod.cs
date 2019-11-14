@@ -8,6 +8,8 @@ using Microsoft.Speech.Recognition;
 using System.IO;
 using System.Globalization;
 using Microsoft.Speech.Recognition.SrgsGrammar;
+using multimodal;
+using Microsoft.Speech.Synthesis;
 
 namespace speechModality
 {
@@ -17,6 +19,7 @@ namespace speechModality
         private GrammarBuilder builder;
         private Grammar gr;
         public event EventHandler<SpeechEventArg> Recognized;
+        private SpeechSynthesizer speechSynthesizer;
         protected virtual void onRecognized(SpeechEventArg msg)
         {
             EventHandler<SpeechEventArg> handler = Recognized;
@@ -31,12 +34,22 @@ namespace speechModality
 
         public SpeechMod()
         {
+                        
+            speechSynthesizer = new SpeechSynthesizer();
+            speechSynthesizer.SetOutputToDefaultAudioDevice();
+            speechSynthesizer.SpeakAsync("Olá, sou o assistente do teu navegador! Algo que precises é só dizeres!");
+            speechSynthesizer.SpeakAsync("Adeus");
+
+
             //init LifeCycleEvents..
             lce = new LifeCycleEvents("ASR", "FUSION","speech-1", "acoustic", "command"); // LifeCycleEvents(string source, string target, string id, string medium, string mode)
             //mmic = new MmiCommunication("localhost",9876,"User1", "ASR");  //PORT TO FUSION - uncomment this line to work with fusion later
             mmic = new MmiCommunication("localhost", 8000, "User1", "ASR"); // MmiCommunication(string IMhost, int portIM, string UserOD, string thisModalityName)
 
             mmic.Send(lce.NewContextRequest());
+
+            
+
 
             var sampleDoc = new SrgsDocument(Environment.CurrentDirectory + "\\ptG.grxml");
             sampleDoc.Culture = CultureInfo.GetCultureInfo("pt-PT");
@@ -72,12 +85,15 @@ namespace speechModality
         private void Sre_SpeechHypothesized(object sender, SpeechHypothesizedEventArgs e)
         {
             onRecognized(new SpeechEventArg() { Text = e.Result.Text, Confidence = e.Result.Confidence, Final = false });
+            
         }
 
         private void Sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
 
-            onRecognized(new SpeechEventArg(){Text = e.Result.Text, Confidence = e.Result.Confidence, Final = true});
+            
+            onRecognized(new SpeechEventArg() { Text = e.Result.Text, Confidence = e.Result.Confidence, Final = true });
+            
 
             //SEND
             // IMPORTANT TO KEEP THE FORMAT {"recognized":["SHAPE","COLOR"]}

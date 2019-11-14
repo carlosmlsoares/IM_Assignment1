@@ -22,7 +22,10 @@ namespace AppGui
     /// </summary>
     public partial class MainWindow : Window
     {
+
         private MmiCommunication mmiC;
+        private MmiCommunication mmi_speechMod;
+        private LifeCycleEvents lce_speechMod;
         private IWebDriver driver;
         private InputSimulator sim;
         private List<string> tabs;
@@ -40,6 +43,13 @@ namespace AppGui
             mmiC = new MmiCommunication("localhost", 8000, "User1", "GUI");
             mmiC.Message += MmiC_Message;
             mmiC.Start();
+
+            //Initialize MMI to send messages to speech mod
+
+            lce_speechMod = new LifeCycleEvents("ASR", "FUSION", "speech-2", "acoustic", "command"); // LifeCycleEvents(string source, string target, string id, string medium, string mode)
+            mmi_speechMod = new MmiCommunication("localhost", 8000, "User2", "ASR"); // MmiCommunication(string IMhost, int portIM, string UserOD, string thisModalityName)
+            mmi_speechMod.Send(lce_speechMod.NewContextRequest());
+
 
         }
 
@@ -241,9 +251,20 @@ namespace AppGui
             }
 
             
+        }
 
+        private void SendTtsMessage(string messageToSpeak)
+        {
+            string json = "{\"recognized\":\"" + messageToSpeak + "\"}";
+            var exNot = lce_speechMod.ExtensionNotification("", "", 0, json);
+            mmi_speechMod.Send(exNot);
+        }
 
+        private void SendNewWords(string[] words)
+        {
 
         }
+
+
     }
 }

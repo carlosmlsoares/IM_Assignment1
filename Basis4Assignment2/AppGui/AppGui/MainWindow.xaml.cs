@@ -30,11 +30,17 @@ namespace AppGui
         private IWebDriver driver;
         private InputSimulator sim;
         private List<string> tabs;
+
+        private Int32 minWordLen;
+        private Int32 minWordCount; 
         public MainWindow()
         {
 
             //InitializeComponent();
 
+
+            minWordCount = 3;
+            minWordLen = 4;
 
             driver = new ChromeDriver(".");
             System.Threading.Thread.Sleep(3000);
@@ -63,7 +69,7 @@ namespace AppGui
             List<String> words = ((JArray)json["recognized"]).ToObject<List<String>>();
 
             var rec0 = words[0].ToString();
-            var rec1="";
+            var rec1 = "";
             int cont = 0;
             foreach (string word in words)
             {
@@ -75,17 +81,17 @@ namespace AppGui
             }
             else { rec1 = words[1].ToString(); }
 
-            string searchText="";
-            
-            
-            foreach(string word in words)
+            string searchText = "";
+
+
+            foreach (string word in words)
             {
                 if (word != "search")
                 {
-                    searchText += word+" ";
+                    searchText += word + " ";
                 }
             }
-            
+
             List<String> numbers = new List<String>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
             switch (rec0)
             {
@@ -100,6 +106,8 @@ namespace AppGui
                     System.Threading.Thread.Sleep(200);
                     sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
 
+                    SendTtsMessage("Estes são os teus resultados");
+
                     break;
                 case "save":
                     switch (rec1)
@@ -110,10 +118,11 @@ namespace AppGui
                             sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
                             System.Threading.Thread.Sleep(100);
                             sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
+                            SendTtsMessage("Adicionado com sucesso aos teus favoritos");
                             break;
                     }
                     break;
-                    
+
 
                 case "minimize":
                     switch (rec1)
@@ -141,7 +150,7 @@ namespace AppGui
                             break;
                     }
                     break;
-                    
+
                 case "zoom_out":
                     switch (rec1)
                     {
@@ -176,7 +185,7 @@ namespace AppGui
                     //Console.WriteLine(tabs.ToString());
                     tabs = driver.WindowHandles.ToList();
                     int index2 = tabs.IndexOf(driver.CurrentWindowHandle);
-                    if (index2 == tabs.Count()-1)
+                    if (index2 == tabs.Count() - 1)
                     {
                         driver.SwitchTo().Window(driver.WindowHandles.First());
                     }
@@ -184,7 +193,7 @@ namespace AppGui
                     {
                         driver.SwitchTo().Window(tabs[index2 + 1]);
                     }
-                    
+
 
                     break;
                 case "close":
@@ -192,11 +201,10 @@ namespace AppGui
                     tabs = driver.WindowHandles.ToList();
                     if (tabs.Count() > 1)
                     {
-                        
                         driver.Close();
                         driver.SwitchTo().Window(driver.WindowHandles.First());
                     }
-                    
+
                     break;
                 case "open":
                     switch (rec1)
@@ -213,6 +221,7 @@ namespace AppGui
                             sim.Keyboard.KeyPress(VirtualKeyCode.VK_H);
                             sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
                             driver.SwitchTo().Window(driver.WindowHandles.Last());
+                            SendTtsMessage("Aqui está o teu histórico de navegação");
                             break;
                         case "favourites":
                             sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
@@ -220,10 +229,12 @@ namespace AppGui
                             sim.Keyboard.KeyPress(VirtualKeyCode.VK_O);
                             sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
                             sim.Keyboard.KeyUp(VirtualKeyCode.SHIFT);
+                            SendTtsMessage("Aqui estão os teus favoritos");
                             break;
-                        
+
                         default:
-                            if (driver.Url.Contains("https://www.google.com/search?")){
+                            if (driver.Url.Contains("https://www.google.com/search?"))
+                            {
                                 if (numbers.Contains(rec1))
                                 {
 
@@ -240,56 +251,66 @@ namespace AppGui
                                             final.Add(we);
                                         }
                                     }
-                                    IWebElement element = final[linkNumber + 1];
 
-                                    element.Click();
-                                    string text = "";
-                                    
-                                    ICollection<IWebElement> textElements = driver.FindElements(By.TagName("p"));
-                                    textElements.Concat(driver.FindElements(By.TagName("h1")));
-                                    textElements.Concat(driver.FindElements(By.TagName("h2")));
-                                    textElements.Concat(driver.FindElements(By.TagName("h3")));
-                                    foreach (IWebElement elem in textElements){text += elem.Text.ToString()+" ";}
-                                    string[] palavras = text.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-                                    List<string> pal = palavras.ToList();
-                                    
-                                    var counts = new Dictionary<string, int>();
 
-                                    foreach (string value in pal)
+                                    if (linkNumber < final.Count())
                                     {
-                                        if (counts.ContainsKey(value))
-                                            counts[value] = counts[value] + 1;
-                                        else
-                                            counts.Add(value, 1);
-                                    }
-                                    List<String> keywords = new List<string>();
-                                    foreach (string key in counts.Keys)
-                                    {
-                                        if (counts[key] >= 2 && key.Length > 3) 
+                                        IWebElement element = final[linkNumber - 1];
+                                        element.Click();
+                                        string text = "";
+
+                                        ICollection<IWebElement> textElements = driver.FindElements(By.TagName("p"));
+                                        textElements.Concat(driver.FindElements(By.TagName("h1")));
+                                        textElements.Concat(driver.FindElements(By.TagName("h2")));
+                                        textElements.Concat(driver.FindElements(By.TagName("h3")));
+                                        foreach (IWebElement elem in textElements) { text += elem.Text.ToString() + " "; }
+                                        string[] palavras = text.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                                        List<string> pal = palavras.ToList();
+
+                                        var counts = new Dictionary<string, int>();
+
+                                        foreach (string value in pal)
                                         {
-                                            keywords.Add(key);
+                                            if (counts.ContainsKey(value))
+                                                counts[value] = counts[value] + 1;
+                                            else
+                                                counts.Add(value, 1);
                                         }
-                                    }
-                                    foreach (string s in keywords)
-                                    {
-                                        Console.WriteLine(s + " ");
-                                    }
+                                        List<String> keywords = new List<string>();
+                                        foreach (string key in counts.Keys)
+                                        {
+                                            if (counts[key] >= minWordCount && key.Length > minWordLen)
+                                            {
+                                                keywords.Add(key);
+                                            }
+                                        }
+                                        foreach (string s in keywords)
+                                        {
+                                            Console.WriteLine(s + " ");
+                                        }
 
-                                    //Update speech mod with new words to add to the grammar
-                                    SendNewWords(keywords);
+                                        //Update speech mod with new words to add to the grammar
+                                        SendNewWords(keywords);
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        int links = final.Count() - 1;
+                                        SendTtsMessage("Apenas detetei " + links.ToString() + " links que possas abrir");
+                                    }
 
                                     break;
-                                    }
+                                }
                                 break;
                             }
                             break;
-                            
+
                     }
                     break;
-                        
+
             }
 
-            
+
         }
 
         private void SendTtsMessage(string messageToSpeak)

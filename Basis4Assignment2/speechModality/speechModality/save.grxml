@@ -14,7 +14,17 @@
 		<one-of>
 			<item> Adiciona </item>
 			<item> Guarda </item>
-			<item> Gosto </item>
+			<item> 
+        Gosto 
+        <item repeat="0-1">
+
+          <one-of>
+            <item>deste</item>
+            <item>desta</item>
+          </one-of>
+        
+        </item>
+    </item>
 	  </one-of>
     <tag>out="save"</tag>
 	</rule>

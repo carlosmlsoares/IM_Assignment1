@@ -43,8 +43,7 @@ namespace speechModality
 
             speechSynthesizer = new SpeechSynthesizer();
             speechSynthesizer.SetOutputToDefaultAudioDevice();
-            speechSynthesizer.SpeakAsync("Olá, sou o assistente do teu navegador! Algo que precises é só dizeres!");
-            speechSynthesizer.SpeakAsync("Adeus");
+            speechSynthesizer.SpeakAsync("Olá, sou o Crome, o assistente do teu navegador! Algo que precises é só dizeres!");
 
             //init LifeCycleEvents..
             lce = new LifeCycleEvents("ASR", "FUSION", "speech-1", "acoustic", "command"); // LifeCycleEvents(string source, string target, string id, string medium, string mode)

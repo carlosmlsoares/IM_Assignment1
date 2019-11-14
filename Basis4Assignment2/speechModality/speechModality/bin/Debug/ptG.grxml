@@ -3,6 +3,8 @@
 	
   <rule id="rootRule" scope="public">
 
+    <item>Crome</item>
+    
     <one-of>
       <item> 
         <ruleref uri="open.grxml"/>
@@ -18,7 +20,7 @@
         <tag>out.Close = rules.Close</tag>
       </item>
       <item>
-        <ruleref uri="search.grxml"/>
+        <ruleref uri="#Search"/>
       </item>
     </one-of>
    
@@ -37,6 +39,52 @@
     <item>
       <ruleref uri="open.grxml#TabObject"/>
     </item>
+  </rule>
+
+
+  <rule id="Search">
+    <ruleref uri="#SearchSpec"/>
+    <tag>out.SearchSpec = rules.SearchSpec;</tag>
+    <ruleref uri="#SearchObject"/>
+    <tag>out.SearchObject = rules.SearchObject.Object;</tag>
+    
+  </rule>
+
+  <rule id="SearchSpec">
+    <item>
+      <one-of>
+        <item>Procura por</item>
+        <item>Pesquisa por</item>
+        <item>Quero saber sobre</item>
+      </one-of>
+    </item>
+    <tag>out = "search"</tag>
+  </rule>
+
+  <rule id="SearchObject">
+    <tag>out.Object = new Array;</tag>
+    <ruleref uri="#SearchWords"/>
+    <tag>out.Object.push(rules.SearchWords);</tag>
+    <item repeat="0-10">
+      e
+      <ruleref uri="#SearchWords"/>
+      <tag>out.Object.push(rules.SearchWords);</tag>
+    </item>
+  </rule>
+
+
+  <rule id="SearchWords">
+    <one-of>
+      <item>
+        footebol 
+      </item>
+      <item>
+        noticias
+      </item>
+      <item>
+        mail <tag>out = "mail"</tag>
+      </item>
+    </one-of>
   </rule>
 
 </grammar>

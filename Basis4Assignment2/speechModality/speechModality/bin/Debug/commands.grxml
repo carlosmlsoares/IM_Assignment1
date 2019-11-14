@@ -39,6 +39,11 @@
         <tag>out.CommandSpec = rules.WindowSizeCommand;</tag>
       </item>
 
+      <item>
+        <ruleref uri="#GoBackCommand"/>
+        <tag>out.CommandSpec = rules.GoBackCommand;</tag>
+      </item>
+
     </one-of>
 
 	</rule>
@@ -86,6 +91,7 @@
           <item> Zoom in </item>
           <item> Faz zoom in </item>
           <item> magnifica </item>
+          <item> não consigo ver bem </item>
         </one-of>
         <tag>out="zoom_in";</tag>
       </item>
@@ -126,9 +132,22 @@
     
   </rule>
 
+  <rule id="GoBackCommand">
+    <item>
+      <one-of>
+        <item>Anda para atrás</item>
+        <item>Volta para atrás</item>
+        <item>Retroceder</item>
+        <item>Retrocede</item>
+      </one-of>
+    </item>
+    <tag>out="goBack"</tag>
+  </rule>
+
   <rule id="SizeObject">
     <one-of>
       <item>Página</item>
+      <item>Conteúdo</item>
     </one-of>
   </rule>
 

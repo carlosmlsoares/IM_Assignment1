@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Microsoft.Speech.Recognition.SrgsGrammar;
 using multimodal;
 using Microsoft.Speech.Synthesis;
+using Newtonsoft.Json.Linq;
 
 namespace speechModality
 {
@@ -20,6 +21,8 @@ namespace speechModality
         private SpeechRecognitionEngine sre;
         private GrammarBuilder builder;
         private Grammar gr;
+        private CultureInfo culture;
+        private HashSet<string> words;
         public event EventHandler<SpeechEventArg> Recognized;
         private SpeechSynthesizer speechSynthesizer;
         protected virtual void onRecognized(SpeechEventArg msg)
@@ -54,31 +57,11 @@ namespace speechModality
             mmic_gui.Message += MmiC_Message;
             mmic_gui.Start();
 
-            CultureInfo culture = CultureInfo.GetCultureInfo("pt-PT");
+            culture = CultureInfo.GetCultureInfo("pt-PT");
 
             var sampleDoc = new SrgsDocument(Environment.CurrentDirectory + "\\ptG.grxml");
             sampleDoc.Culture = culture;
-
-            /*SrgsRule searchWordsRule = new SrgsRule("SearchWords");
-            searchWordsRule.Add(new SrgsOneOf(                                          
-                new SrgsItem("footebol")
-            ));
-
-            sampleDoc.Rules.Add(searchWordsRule);*/
-            /*
-            List<SrgsRule> list = sampleDoc.Rules.ToList<SrgsRule>();
-            SrgsRule searchWordsRule = sampleDoc.Rules.ToList<SrgsRule>()[list.Count()-1];
-            searchWordsRule.Elements.Clear();
-            SrgsOneOf oneOf = new SrgsOneOf();
-            List<String> myList = new List<String>() { "aveiro", "porto", "lisboa" };
-            foreach(string word in myList)
-            {
-                oneOf.Add(new SrgsItem(word));
-            }
-            searchWordsRule.Add(oneOf);
-
-             */
-
+            
             gr = new Grammar(sampleDoc);
 
             //load pt recognizer
@@ -90,6 +73,15 @@ namespace speechModality
             sre.RecognizeAsync(RecognizeMode.Multiple);
             sre.SpeechRecognized += Sre_SpeechRecognized;
             sre.SpeechHypothesized += Sre_SpeechHypothesized;
+            
+            //Update grammar with some few basic words
+            List<String> temp_words = new List<string>();
+            temp_words.Add("noticias");
+            temp_words.Add("futebol");
+            temp_words.Add("saúde");
+            temp_words.Add("desporto");
+
+            updateGrammar(temp_words);
 
         }
 
@@ -111,7 +103,6 @@ namespace speechModality
             string json = "{ \"recognized\": [";
             foreach (var resultSemantic in e.Result.Semantics)
             {
-                Console.WriteLine(resultSemantic.Key.ToString());
                 if (resultSemantic.Key == "SearchObject")
                 {
                     foreach (var val in resultSemantic.Value.ToArray())
@@ -139,7 +130,51 @@ namespace speechModality
             var doc = XDocument.Parse(e.Message);
             var com = doc.Descendants("command").FirstOrDefault().Value;
             dynamic json = JsonConvert.DeserializeObject(com);
+            string action = json.action;
+
+            if (action.Equals("speak"))
+            {
+
+                string text_to_speak = json.text_to_speak;
+                speechSynthesizer.SpeakAsync(text_to_speak);
+                
+            }
+            else if (action.Equals("newWords"))
+            {
+
+                List<String> wordsToAdd = ((JArray)json["newWords"]).ToObject<List<String>>();
+                updateGrammar(wordsToAdd);
+                
+            }
 
         }
+
+        private void updateGrammar(List<string> wordsToAdd)
+        {
+            var sampleDoc = new SrgsDocument(Environment.CurrentDirectory + "\\ptG.grxml");
+            sampleDoc.Culture = culture;
+
+            //The last rule is the words rule
+            List<SrgsRule> list = sampleDoc.Rules.ToList<SrgsRule>();
+            SrgsRule searchWordsRule = sampleDoc.Rules.ToList<SrgsRule>()[list.Count() - 1];
+            searchWordsRule.Elements.Clear();
+
+            SrgsOneOf oneOf = new SrgsOneOf();
+            foreach (string word in wordsToAdd)
+            {
+                words.Add(word);
+            }
+            foreach (string word in words)
+            {
+                oneOf.Add(new SrgsItem(word));
+            }
+            searchWordsRule.Add(oneOf);
+
+            //Now refresh the grammar in the sre
+            gr = new Grammar(sampleDoc);
+            sre.UnloadAllGrammars();
+            sre.LoadGrammar(gr);
+        }
+
     }
     }

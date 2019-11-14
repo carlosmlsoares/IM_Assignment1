@@ -170,3 +170,5 @@ C:\Users\Carlos Soares\Desktop\IM\IM_Assignment1\Basis4Assignment2\speechModalit
 C:\Users\Carlos Soares\Desktop\IM\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\obj\Debug\speechModality.csproj.CopyComplete
 C:\Users\Carlos Soares\Desktop\IM\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\obj\Debug\speechModality.exe
 C:\Users\Carlos Soares\Desktop\IM\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\obj\Debug\speechModality.pdb
+C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ruigr\Desktop\Universidade\IM\2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\bin\Debug\Newtonsoft.Json.xml

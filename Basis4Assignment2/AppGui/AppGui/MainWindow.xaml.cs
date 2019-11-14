@@ -36,13 +36,16 @@ namespace AppGui
         public MainWindow()
         {
 
-            //InitializeComponent();
+            InitializeComponent();
 
+            this.WindowState = WindowState.Minimized;
+            this.ShowInTaskbar = false;
 
             minWordCount = 3;
             minWordLen = 4;
 
             driver = new ChromeDriver(".");
+            driver.Manage().Window.Maximize();
             System.Threading.Thread.Sleep(3000);
             sim = new InputSimulator();
             tabs = driver.WindowHandles.ToList();

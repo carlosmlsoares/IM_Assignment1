@@ -61,7 +61,29 @@ namespace speechModality
 
             var sampleDoc = new SrgsDocument(Environment.CurrentDirectory + "\\ptG.grxml");
             sampleDoc.Culture = culture;
-            
+
+            words = new HashSet<string>();
+            List<String> temp_words = new List<string>();
+            temp_words.Add("noticias");
+            temp_words.Add("futebol");
+            temp_words.Add("saúde");
+            temp_words.Add("desporto");
+
+            List<SrgsRule> list = sampleDoc.Rules.ToList<SrgsRule>();
+            SrgsRule searchWordsRule = sampleDoc.Rules.ToList<SrgsRule>()[list.Count() - 1];
+            searchWordsRule.Elements.Clear();
+
+            SrgsOneOf oneOf = new SrgsOneOf();
+            foreach (string word in temp_words)
+            {
+                words.Add(word);
+            }
+            foreach (string word in words)
+            {
+                oneOf.Add(new SrgsItem(word));
+            }
+            searchWordsRule.Add(oneOf);
+
             gr = new Grammar(sampleDoc);
 
             //load pt recognizer
@@ -73,15 +95,11 @@ namespace speechModality
             sre.RecognizeAsync(RecognizeMode.Multiple);
             sre.SpeechRecognized += Sre_SpeechRecognized;
             sre.SpeechHypothesized += Sre_SpeechHypothesized;
-            
-            //Update grammar with some few basic words
-            List<String> temp_words = new List<string>();
-            temp_words.Add("noticias");
-            temp_words.Add("futebol");
-            temp_words.Add("saúde");
-            temp_words.Add("desporto");
 
-            updateGrammar(temp_words);
+            //Update grammar with some few basic words
+            
+
+            //updateGrammar(temp_words);
 
         }
 

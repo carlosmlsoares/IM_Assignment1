@@ -143,3 +143,5 @@ C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModalit
 C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\save.grxml
 C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\commands.grxml
 C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\search.grxml
+C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Carlos Soares\Desktop\IM\Basis4Assignment2\speechModality\speechModality\bin\Debug\Newtonsoft.Json.xml

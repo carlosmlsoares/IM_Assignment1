@@ -9,6 +9,7 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using mmisharp;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
@@ -59,11 +60,12 @@ namespace AppGui
             var doc = XDocument.Parse(e.Message);
             var com = doc.Descendants("command").FirstOrDefault().Value;
             dynamic json = JsonConvert.DeserializeObject(com);
-            
-            var rec0 = json.recognized[0].ToString();
+            List<String> words = ((JArray)json["recognized"]).ToObject<List<String>>();
+
+            var rec0 = words[0].ToString();
             var rec1="";
             int cont = 0;
-            foreach (string word in json.recognized)
+            foreach (string word in words)
             {
                 cont++;
             }
@@ -71,19 +73,18 @@ namespace AppGui
             {
                 rec1 = "";
             }
-            else { rec1 = json.recognized[1].ToString(); }
-           
-            
+            else { rec1 = words[1].ToString(); }
 
-            var words = "";
-            foreach(string word in json.recognized)
+            string searchText="";
+            
+            
+            foreach(string word in words)
             {
                 if (word != "search")
                 {
-                    words += word+" ";
+                    searchText += word+" ";
                 }
             }
-            
             
             List<String> numbers = new List<String>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
             switch (rec0)
@@ -93,8 +94,10 @@ namespace AppGui
                     sim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
                     sim.Keyboard.KeyPress(VirtualKeyCode.VK_E);
                     sim.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
-                    sim.Keyboard.TextEntry(words);
-                    System.Threading.Thread.Sleep(100);
+                    Console.WriteLine(searchText);
+                    sim.Keyboard.Sleep(200);
+                    sim.Keyboard.TextEntry(searchText);
+                    System.Threading.Thread.Sleep(200);
                     sim.Keyboard.KeyPress(VirtualKeyCode.RETURN);
 
                     break;
@@ -185,10 +188,16 @@ namespace AppGui
 
                     break;
                 case "close":
+
+                    tabs = driver.WindowHandles.ToList();
+                    if (tabs.Count() > 1)
+                    {
+                        
+                        driver.Close();
+                        driver.SwitchTo().Window(driver.WindowHandles.First());
+                    }
                     
-                    int index = tabs.IndexOf(driver.CurrentWindowHandle);
-                    driver.Close(); 
-                    driver.SwitchTo().Window(driver.WindowHandles.First());
+
 
                     
                     break;
@@ -237,10 +246,40 @@ namespace AppGui
                                     IWebElement element = final[linkNumber + 1];
 
                                     element.Click();
+                                    string text = "";
+                                    
+                                    ICollection<IWebElement> textElements = driver.FindElements(By.TagName("p"));
+                                    textElements.Concat(driver.FindElements(By.TagName("h1")));
+                                    textElements.Concat(driver.FindElements(By.TagName("h2")));
+                                    textElements.Concat(driver.FindElements(By.TagName("h3")));
+                                    foreach (IWebElement elem in textElements){text += elem.Text.ToString()+" ";}
+                                    string[] palavras = text.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                                    List<string> pal = palavras.ToList();
+                                    
+                                    var counts = new Dictionary<string, int>();
+
+                                    foreach (string value in pal)
+                                    {
+                                        if (counts.ContainsKey(value))
+                                            counts[value] = counts[value] + 1;
+                                        else
+                                            counts.Add(value, 1);
+                                    }
+                                    List<String> keywords = new List<string>();
+                                    foreach (string key in counts.Keys)
+                                    {
+                                        if (counts[key] >= 2 && key.Length > 3) 
+                                        {
+                                            keywords.Add(key);
+                                        }
+                                    }
+                                    foreach (string s in keywords)
+                                    {
+                                        Console.WriteLine(s + " ");
+                                    }
 
                                     break;
-
-                                }
+                                    }
                                 break;
                             }
                             break;

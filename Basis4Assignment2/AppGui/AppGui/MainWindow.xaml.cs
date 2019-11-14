@@ -197,9 +197,6 @@ namespace AppGui
                         driver.SwitchTo().Window(driver.WindowHandles.First());
                     }
                     
-
-
-                    
                     break;
                 case "open":
                     switch (rec1)
@@ -278,6 +275,9 @@ namespace AppGui
                                         Console.WriteLine(s + " ");
                                     }
 
+                                    //Update speech mod with new words to add to the grammar
+                                    SendNewWords(keywords);
+
                                     break;
                                     }
                                 break;
@@ -294,14 +294,24 @@ namespace AppGui
 
         private void SendTtsMessage(string messageToSpeak)
         {
-            string json = "{\"recognized\":\"" + messageToSpeak + "\"}";
+            string json = "{ \"action\" : \"speak\" , \"text_to_speak\" : \"" + messageToSpeak + "\"}";
             var exNot = lce_speechMod.ExtensionNotification("", "", 0, json);
             mmi_speechMod.Send(exNot);
         }
 
-        private void SendNewWords(string[] words)
+        private void SendNewWords(List<string> words)
         {
+            string json = "{ \"action\": \"newWords\", \"newWords\" : [";
+            foreach (string word in words)
+            {
 
+                json += "\"" + word + "\", ";
+
+            }
+            json = json.Substring(0, json.Length - 2);
+            json += "] }";
+            var exNot = lce_speechMod.ExtensionNotification("", "", 0, json);
+            mmi_speechMod.Send(exNot);
         }
 
 

@@ -17,6 +17,7 @@
         <item>Procura por</item>
         <item>Pesquisa por</item>
         <item>Quero saber sobre</item>
+        <item>Quero saber mais sobre</item>
       </one-of>
     </item>
     <tag>out = "search"</tag>

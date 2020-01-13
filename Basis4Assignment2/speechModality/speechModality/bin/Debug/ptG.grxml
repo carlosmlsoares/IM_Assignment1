@@ -3,27 +3,44 @@
 	
   <rule id="rootRule" scope="public">
 
-    <item>Crome</item>
-    
+
     <one-of>
-      <item> 
-        <ruleref uri="open.grxml"/>
-      </item>
+
       <item>
-        <ruleref uri="save.grxml"/>
+        <item>Crome</item>
+        <one-of>
+          <item>
+            <ruleref uri="open.grxml"/>
+          </item>
+          <item>
+            <ruleref uri="save.grxml"/>
+          </item>
+          <item>
+            <ruleref uri="commands.grxml"/>
+          </item>
+          <item>
+            <ruleref uri="#Close"/>
+            <tag>out.Close = rules.Close</tag>
+          </item>
+          <item>
+            <ruleref uri="#Search"/>
+          </item>
+        </one-of>
       </item>
+
+
+      <!-- Regras que não precisam da palavra "Crome" para serem ativadas -->
       <item>
-        <ruleref uri="commands.grxml"/>
+        <one-of>
+          <item>
+            <ruleref uri="quantity.grxml"/>
+          </item>
+        </one-of>
       </item>
-      <item>
-        <ruleref uri="#Close"/>
-        <tag>out.Close = rules.Close</tag>
-      </item>
-      <item>
-        <ruleref uri="#Search"/>
-      </item>
+      
     </one-of>
-   
+    
+    
 	</rule>
 
   <rule id="Close">

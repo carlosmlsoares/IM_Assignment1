@@ -1,0 +1,5 @@
+C:\Users\ruigr\OneDrive\Ambiente de Trabalho\IM\IM - 2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\obj\x64\Debug\MainWindow.g.cs
+C:\Users\ruigr\OneDrive\Ambiente de Trabalho\IM\IM - 2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\obj\x64\Debug\App.g.cs
+C:\Users\ruigr\OneDrive\Ambiente de Trabalho\IM\IM - 2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\obj\x64\Debug\speechModality_Content.g.cs
+C:\Users\ruigr\OneDrive\Ambiente de Trabalho\IM\IM - 2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\obj\x64\Debug\speechModality_MarkupCompile.cache
+C:\Users\ruigr\OneDrive\Ambiente de Trabalho\IM\IM - 2º Trabalho\IM_Assignment1\Basis4Assignment2\speechModality\speechModality\obj\x64\Debug\speechModality_MarkupCompile.lref
